@@ -1,7 +1,7 @@
 package models
 
 import (
-	"chatapp/config"
+	"chatapp/pkg/config"
 	"context"
 	"errors"
 	"time"

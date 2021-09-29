@@ -1,7 +1,7 @@
 package main
 
 import (
-	"chatapp/config"
+	"chatapp/pkg/config"
 	"chatapp/routes"
 	"log"
 	"os"

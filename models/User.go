@@ -1,12 +1,12 @@
 package models
 
 import (
-	"chatapp/config"
+	"chatapp/pkg/config"
+	"chatapp/pkg/utils"
 	"context"
 	"errors"
 	"time"
 
-	"github.com/golang-jwt/jwt"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/crypto/bcrypt"
@@ -72,7 +72,7 @@ func SignUp(newUser *User) (string, error) {
 		return "", err
 	}
 
-	token, err := createJWTToken(*newUser)
+	token, err := utils.JWTGenerator(newUser.Username)
 	if err != nil {
 		return "", err
 	}
@@ -97,26 +97,10 @@ func Login(credentials *LoginRequest) (string, error) {
 		return "", err
 	}
 
-	token, err := createJWTToken(*user)
+	token, err := utils.JWTGenerator(user.Username)
 	if err != nil {
 		return "", err
 	}
 
 	return token, nil
-}
-
-// Creates JWT Token with user's credentials
-func createJWTToken(user User) (string, error) {
-	exp := time.Now().Add(time.Minute * 30).Unix()
-	token := jwt.New(jwt.SigningMethodHS256)
-	claims := token.Claims.(jwt.MapClaims)
-	claims["username"] = user.Username
-	claims["exp"] = exp
-
-	t, err := token.SignedString([]byte("secret"))
-	if err != nil {
-		return "", err
-	}
-
-	return t, nil
 }
